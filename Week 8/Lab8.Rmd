@@ -1,0 +1,98 @@
+---
+output:
+  pdf_document: default
+  html_document: default
+---
+# Intro to Data Science Lab 8
+##### Copyright Jeffrey Stanton, Jeffrey Saltz, and Jasmina Tacheva
+
+
+```{r}
+# Enter your name here: Hrishikesh Telang
+```
+
+### Attribution statement: (choose only one and delete the rest)
+
+
+```{r}
+# 1. I did this homework by myself, with help from the book and the professor.
+```
+
+#Instructions:	Linear	modeling,	also	referred	to	as	regression	analysis	or	multiple	regression,	is	a	technique	for	fitting	a	line,	plane,	or	higher	order	linear	object	to	data.	In	their	simplest	form,	linear	models	have	one	metric	outcome	variable	and	one	or	more	predictor	variables	(any	combination	of	metric	values,	ordered	scales	such	as	ratings,	or	dummy	codes).	Make	sure	to	library	the	MASS and ggplot2 packages	before running the following:	
+```{r}
+library(MASS) #Call library MASS
+library(ggplot2) #Call library ggplot2
+ggplot(data=Boston) + aes(x=rm, y=medv) + geom_point() + geom_smooth(method="lm", se=FALSE)
+#geom_smooth returns a linear model, ggplot plots the data of the Boston dataset,
+#aes decides the x and y axes of the plane, and geom_point returns point distribution. 
+```
+
+#1. Explore	this	dataset	descrption	by	doing	?Boston	at	the	command	prompt
+```{r}
+?Boston
+```
+
+#2. The	graphic	you	just	created	fits	a	best	line	to	a	cloud	of	points.	Copy	and	modify the	code	to	produce	a	plot	where	“crim”	is	the	x	variable	instead	of	“rm.”
+```{r}
+ggplot(data=Boston) + aes(x=crim, y=medv) + geom_point() + geom_smooth(method="lm", se=FALSE)
+```
+
+#3. Produce	a	histogram	and	descriptive	statistics	for	Boston$crim.	Write	a comment	describing	any	anomalies	or	oddities.
+```{r}
+hist(Boston$crim,
+     main='Distribution of per capita crime rate by town',
+     xlab='per capita crime rate by town',
+     simplify=TRUE)
+
+#The following distribution does have anomalies. It is highly right skewed 
+#which totally deviates from normal distribution.
+```
+
+#4. Produce	a	linear	model,	using	the	lm( )	function	where	crim predicts	medv. Remember	that	in	R’s	formula	language,	the	outcome	variable	comes	first	and	is separated	from	the	predictors	by	a	tilde,	like	this: medv ~ crim.
+```{r}
+lm(formula = medv ~ crim, data=Boston)
+```
+
+#Try	to	get	in	the	habit	of	storing	the	output	object	that	is	produced	by	lm	and other	analysis	procedures.	For	example,	I	often	use	lmOut <- lm( . . .
+```{r}
+sample <- lm(formula = medv ~ crim, data=Boston)
+sample
+```
+
+#5. Run	a	multiple	regression	where	you	use	rm, crim,	and	dis	(distance	to Boston	employment	centers).	You will use	all	three	predictors	in	one	model	with this formula:		medv ~ crim + rm + dis. Now run three separate models for each independent variable separate.
+```{r}
+lmOut <- lm(formula=medv ~ crim + rm + dis, data=Boston)
+summary(lmOut)
+
+lmOut2 <- lm(formula=medv ~ crim, data=Boston)
+summary(lmOut2)
+
+lmOut3 <- lm(formula=medv ~ rm, data=Boston)
+summary(lmOut3)
+
+lmOut4 <- lm(formula=medv ~ dis, data=Boston)
+summary(lmOut4)
+```
+
+#6. Interpret	the	results	of	your	analysis	in	a	comment.	Make	sure	to	mention	the	pvalue,	the	adjusted	R-squared,	the	list	of	significant	predictors	and	the	coefficient for	each	significant	predictor.
+```{r}
+#We tried analyzing the predictions for four different types of independent variables:
+#With independent variables crim + rm + dis, p-value is < 2.2e-16 whereas Adjusted R-squared:  0.5399,
+#With a single independent variable crim, p-value is < 2.2e-16 whereas Adjusted R-squared:  0.1491,
+#With a single independent variable rm, p-value is < 2.2e-16 whereas Adjusted R-squared:  0.4825,
+#And finally, with a single independent variable dis, p-value is 1.207e-08 whereas Adjusted R-squared:  0.0606.
+#Of these, independent variables crim + rm + dis produce the highest fitting variables.
+```
+
+#7. Create	a	one-row	data	frame	that	contains	some	plausible	values	for	the predictors.	For	example,	this	data	frame	contains	the	median	values	for	each predictor: 
+```{r}
+predDF <- data.frame(crim = 0.26, dis=3.2, rm=6.2)
+predDF
+```
+#The numbers used here were selected randomly by looking at min and max data of the variables.
+
+#8. Use	the	predict( ) command	to	predict	a	new	value	of	medv	from	the	onerow	data	frame.	If	you	stored	the	output	of	your	lm	model	in	lmOut,	the command	would	look	like	this:
+```{r}
+predict(lmOut, predDF)
+```
+
