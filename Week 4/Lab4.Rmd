@@ -1,0 +1,122 @@
+---
+output:
+  pdf_document: default
+  html_document: default
+---
+## Intro to Data Science - Lab 4
+# IST687 Section M003
+# Professor Anderson
+# Enter your name here: Hrishikesh Telang
+
+#Select one of the below and add needed information
+# 1. I did this homework by myself, with help from the book and the professor.
+# 2. I did this homework with help from the book and the professor and these Internet sources:
+# 3. I did this homework with help from <Name of another student> but did not cut and paste any code.
+
+#The	problem	is	this:	You	receive	a	sample	containing	the	ages	of	30	students.	You	are	wondering	whether	this	sample	is	a	group	of	undergraduates	(mean	age	=	20	years)	or	graduates	(mean	age	=	25	years).	To	answer	this	question,	you	must	compare the	mean	of	the	sample	you	receive	to	a	distribution	of	means	from	the	population.	The	following	fragment	of	R	code	begins	the	solution:
+
+```{r}
+set.seed(2)
+sampleSize <- 30
+studentPop <- rnorm(20000,mean=20,sd=3)
+undergrads <- sample(studentPop,size=sampleSize,replace=TRUE)
+grads <- rnorm(sampleSize,mean=25,sd=3)
+if (runif(1)>0.5) { testSample <- grads } else { testSample <- undergrads }
+mean(testSample)
+```
+
+#After	you	run	this	code,	the	variable	“testSample”	will	contain	either	a	sample	of	undergrads	or	a	sample	of grads.	The	line before	last “flips	a	coin”	by	generating	one	value	from	a	uniform	distribution	(by	default	the	distribution	covers	0	to	1)	and	comparing	it	to	0.5.	The	question	you	must	answer	with	additional	code	is:	Which	is	it,	grad	or	undergrad?
+
+#Here are	the	steps	that	will	help	you	finish	the	job:
+#1. Annotate	the	code	above	with	line-by-line	commentary.	In	other	words,	you	must	explainwhat	each	of	the	six	lines	of	code	above	actually	do!	You	will	have	to	lookup	the	meaning	of	some	commands.
+
+#2. Generate	10	samples	from	the	“undergrads”	dataset.
+```{r}
+sample(undergrads, size=10, replace=TRUE)
+```
+
+#3. Generate	10	new	samples	and	take	the	mean	of	that	sample
+```{r}
+sample_data <- sample(undergrads, size=10, replace=TRUE)
+mean(sample_data)
+```
+
+#4. Repeat	this	process	3	times	(i.e.,	generate	a	sample	and	take	the	mean	3	times,	using	the	replicate	function).
+```{r}
+replicate(3, mean(sample(undergrads, size=10, replace=TRUE)), simplify=TRUE)
+```
+
+
+#End	of	the	first	breakout:
+
+#5. Generate	a	list	of	sample	means	from	the	population	called	“undergrads”
+#How	many	sample	means	should	you	generate?	Really	you	can	create	any	number	that	you	want	– hundreds,	thousands,	whatever	– but	I	suggest	for	ease	of	inspection	that	you	generate	just	100	means.	That	is	a	pretty	small	number,	but	it	makes	it	easy	to	think	about	percentiles	and	ranks.	
+```{r}
+richie <- replicate(100, mean(sample(undergrads, size=10, replace=TRUE)), simplify=TRUE)
+richie
+```
+
+#6. Once	you	have	your	list	of	sample	means	generated	from	undergrads,	the	trick	is	to	compare	mean(testSample)	to	that	list	of	sample	means	and	see	where	it	falls.	Is	it in	the	middle	of	the	pack?	Far	out	toward	one	end?	Here	is	one	hint	that	will	help	you:	In	chapter	7,	the	quantile()	command	is	used	to	generate	percentiles	based	on	thresholds	of	2.5%	and	97.5%.	Those	are	the	thresholds	we	want,	and	the	quantile()	command	will	help	you	create	them.
+```{r}
+quant <- quantile(richie, probs=c(0.025,0.975))
+quant
+```
+
+#7. Your	code	should	have a	print()	statement	that	should	say	either,	“Sample	mean	is	extreme,”	or,	“Sample	mean	is	not	extreme.”
+```{r}
+if (mean(undergrads) < quant[1] || mean(undergrads) > quant[2]) {
+  print("Sample	mean is extreme")
+} else {
+  print("Sample mean is not extreme")
+}
+```
+
+#8. Add	a	comment	stating	if	you	think	the	testSample	are	undergrad	students.	Explain	why	or why	not.
+```{r}
+mean(undergrads)
+#I personally think that the testSample are undergrad students because the mean sample is between 17 and 21 which is usually the ideal age when undergrad students attend college.
+```
+
+#9. Repeat	the	same	analysis	to	see	if	the	testSample	are	grad	students. Learning	Goals	for	this	activity:
+#A. Generate random	numbers	in	a	normal distribution	and	assign	a	variable	name.
+#B. Understand	and	use	a	conditional	statement.
+#C. Reason	about	percentiles.
+#D. Reason	about	distributions	of	sample	means.
+#E. Use	R	code	to	report	the	results	of	a	test.
+
+```{r}
+sample(grads, size=10, replace=TRUE)
+```
+
+```{r}
+sample_data <- sample(grads, size=10, replace=TRUE)
+mean(sample_data)
+```
+
+```{r}
+replicate(3, mean(sample(grads, size=10, replace=TRUE)), simplify=TRUE)
+```
+
+```{r}
+richie2 <- replicate(100, mean(sample(grads, size=10, replace=TRUE)), simplify=TRUE)
+richie2
+```
+
+```{r}
+quant <- quantile(richie2, probs=c(0.025,0.975))
+quant
+```
+
+```{r}
+if (mean(grads) < quant[1] || mean(grads) > quant[2]) {
+  print("Sample	mean is extreme")
+} else {
+  print("Sample mean is not extreme")
+}
+```
+
+```{r}
+mean(undergrads)
+#I personally think that the testSample are undergrad students because the given mean sample is between 23 and 26 which is usually the age when grad students attend college.
+```
+
