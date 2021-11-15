@@ -1,0 +1,139 @@
+---
+output:
+  pdf_document: default
+  html_document: default
+---
+# Intro to Data Science Lab 9
+##### Copyright Jeffrey Stanton, Jeffrey Saltz, and Jasmina Tacheva
+
+
+```{r}
+# Enter your name here: Hrishikesh Telang
+```
+
+### Attribution statement: (choose only one and delete the rest)
+
+
+```{r}
+# 1. I did this homework by myself, with help from the book and the professor.
+```
+
+#Instructions:	Supervised	data	mining/machine	learning is	the	most	prevalent	form	of	data	mining	as	it	allows for	the	prediction	of	new	cases	in	the	future.	For	example, when	credit	card	companies	are	trying	to	detect	fraud,	they	will	create	a	supervised	model	by	training	it	on	fraud	data	that	they	already	have. Then	they	will	deploy	the	model	into	the	field:	As	new	input	data	arrives the	model	predicts	whether	it	seems	fraudulent	and	flags	those	transactions	where	that	probability	is	high.In	these	exercises	we	will	work	with	a	built-in data	set	called	GermanCredit.	This	data	set	is	in	the	“caret”	package	so	we	will	need	that	and	the	“kernlab”	package	to be	installed	and	“libraried” before	running	the	following:
+```{r}
+#install.packages('caret')
+#install.packages('kernlab')
+#install.packages('libraried')
+library('caret')
+library('kernlab')
+data("GermanCredit")
+subCredit <- GermanCredit[,1:10]
+str(subCredit)
+```
+#1. Examine	the	data	structure	that	str()	reveals.	Also	use	the	help()	function	to learn	more	about	the	GermanCredit	data	set.	Summarize	what	you	see	in	a comment.
+```{r}
+help('GermanCredit')
+head(subCredit)
+```
+
+
+#2. Use	the	createDataPartition() function	to	generate	a	list	of	cases	to include	in	the	training	data.	This	function is	conveniently	provided	by	caret	and allows	one	to	directly	control	the	number	of	training	cases.	It	also	ensures	that the	training	cases	are	balanced	with	respect	to	the	outcome	variable.	Try	this:
+```{r}
+trainList <- createDataPartition(y=subCredit$Class,p=.40,list=FALSE)
+```
+
+#3. Examine	the	contents	of	trainList	to	make	sure	that	it	is	a	list	of	case	numbers. With	p=0.40,	it	should	have	400	case	numbers	in	it.
+```{r}
+str(trainList)
+#trainList
+```
+
+
+#4. What	is	trainList?	What	do	the	elements	in	trainList	represent?	Which	attribute is	balanced	in	the	trainList	dataset?
+```{r}
+#trainList is used to train our model with the available model to implement 
+#it on the test data.
+#The train list consists the 40 percent of the data
+```
+
+
+#5. Use	trainList	and	the	square	brackets	notation	to	create	a	training	data	set	called “trainSet”	from	the	subCredit	data	frame.	Look	at	the	structure	of	trainSet	to make	sure	it	has	all	of	the	same	variables	as	subCredit.	The	trainSet	structure should	be	a	data	frame	with	400	rows	and	10	columns.
+```{r}
+trainSet <- subCredit[trainList,]
+head(trainSet)
+str(trainSet)
+```
+
+
+#6. Use	trainList	and	the	square	brackets	notation	to	create	a	testing	data	set	called “testSet”	from	the	subCredit	data	frame.	The	testSet	structure	should	be	a	data frame	with	600	rows	and	10	columns	and	should	be	a	completely	different	set	of cases	than	trainSet.
+```{r}
+testSet <- subCredit[-trainList,]
+head(testSet)
+str(testSet)
+```
+
+
+#7. Create	and	interpret	boxplots	of	all the	predictor	variables in	relation	to	the outcome	variable	(Class).
+```{r}
+boxplot(Duration~Class,data=trainSet, main="German Credit Data",
+   xlab="Duration", ylab="Class")
+boxplot(Amount~Class,data=subCredit, main="German Credit Data",
+   xlab="Amount", ylab="Class")
+#boxplot(InstallmentRatePercentage~Class,data=subCredit, main="German Credit Data",
+#   xlab="Installment Rate Percentage", ylab="Class")
+#boxplot(ResidenceDuration~Class,data=subCredit, main="German Credit Data",
+#   xlab="Residence Duration", ylab="Class")
+#boxplot(Age~Class,data=subCredit, main="German Credit Data",
+#   xlab="Age", ylab="Class")
+#boxplot(NumberExistingCredits~Class,data=subCredit, main="German Credit Data",
+#   xlab="Number of existing credits", ylab="Class")
+#boxplot(NumberPeopleMaintenance~Class,data=subCredit, main="German Credit Data",
+#   xlab="Number of people being liable to provide maintenance for", ylab="Class")
+#boxplot(Telephone~Class,data=subCredit, main="German Credit Data",
+#   xlab="Telephone", ylab="Class")
+#boxplot(ForeignWorker~Class,data=subCredit, main="German Credit Data",
+#   xlab="Foreign Worker Status", ylab="Class")
+```
+
+
+#8. Train	a	support	vector	machine	with	the	ksvm()	function	from	the	kernlab package.	Make	sure	that	you	have	installed	and	libraried	the kernlab package. Have	the	cost be	5,	and	have	ksvm	do	3	cross	validations	(hint:	try	prob.model	=	TRUE)
+```{r}
+svm <- ksvm(Class ~ .,data = trainSet, C=5, cross=3, prob.model = TRUE)
+svm
+```
+
+
+#9. Examine	the	ksvm output	object.	In	particular,	look	at	the	cross-validation	error for	an	initial	indication	of	model	quality.	Add	a	comment	that	gives	your	opinion on	whether	this	is	a	good	model.
+```{r}
+#The cross-validation error is 0.297591
+#This error is close to the training error, and thus can be deemed as a good model
+```
+
+
+#10. Predict	the	training	cases	using	the	predict	command
+```{r}
+pred <- predict(svm, testSet)
+pred
+```
+
+
+#11. Examine	the	predicted	out	object	with	str(	).	Then,	calculate	a	confusion	matrix using	the	table	function.
+```{r}
+summary(pred)
+table(pred,testSet$Class)
+```
+
+
+#12. Interpret	the	confusion	matrix	and	in	particular	calculate	the	overall	accuracy	of the	model.	The	diag(	) command	can	be	applied	to	the	results	of	the	table command	you	ran	in	the	previous	step.	You	can	also	use	sum()	to	get	the	total	of all	four	cells.
+```{r}
+#The accuracy of the model is 69.33%
+sum(diag(table(pred,testSet$Class)))/sum(table(pred,testSet$Class))
+```
+
+
+#13. Check	you	calculation	with	confusionMatrix()	function	in	the	caret	package.
+```{r}
+#We are using Confusion Matrix using the function
+library(caret)
+confusionMatrix(pred,testSet$Class)
+```
+
