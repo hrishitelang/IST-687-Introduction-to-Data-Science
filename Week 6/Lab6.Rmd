@@ -1,0 +1,107 @@
+---
+output:
+  pdf_document: default
+  html_document: default
+---
+# Intro to Data Science - Lab 6
+
+## IST687 Section M003
+### Professor Anderson
+
+```{r}
+# Enter your name here: Hrishikesh Telang
+```
+
+###Select one of the below and add needed information
+```{r}
+# 1. I did this homework by myself, with help from the book and the professor.
+```
+
+#Here	are	two lines	of	starter	code:	
+```{r}
+library(ggplot2)
+myPlot <- ggplot(economics, aes(x=date))
+myPlot <- myPlot + geom_line(aes(y=psavert))
+```
+
+#1. Run	these	two lines	of	code.	What	happens?	How	do	you	actually	“invoke”	the plot	(i.e.,	how	do	you	get	it	to	draw	in	the	plot	window)?
+```{r}
+#The first line creates a ggplot function that just produces a visualization of 
+#'economics' with x axis as date
+#With the myPlot already created, the second line overrides myPlot by adding 
+#psavert as the y axis
+#We can invoke the plot by calling myPlot directly, like this:
+myPlot
+```
+
+#2. Run help("economics") to	find	out	the	meaning	of	the	psavert	variable.
+```{r}
+View(economics)
+str(economics)
+help("economics")
+```
+
+#3. Examine	the	plot	to	estimate	when	the	personal	savings	rate	reached	its maximum	value.	Also	examine	the plot	to	estimate	when	the	personal	savings rate	reached	its	minimum	value.
+```{r}
+myPlot
+#From the plot, we can observe that the personal savings rate reached the peak
+#somewhere close to 1975 and reached the lowest dip around 2005 to 2006
+```
+
+#4. Use	which.max(	)	and	which.min(	)	to	verify	your	guesses	from	problem	3.
+```{r}
+#head(economics)
+economics[which.max(economics$psavert),1]
+economics[which.min(economics$psavert),1]
+```
+
+#5. Change	the	color	of	the	plot	line	to	green.	Hint: Changing	a	line	to	a	constant color	happens	in	the	specification	of	the	geometry.
+```{r}
+library(tidyverse)
+myPlot <- ggplot(economics, aes(x=date))
+myPlot <- myPlot + geom_line(aes(y=psavert), colour='green')
+myPlot
+```
+
+#6. Add	a	title	to	the	plot	with	the	ggtitle("Put	title	here")	sub-command.	The	title "Personal	Savings	Rate:	1967-2014" would	be	a	good	choice.
+```{r}
+myPlot <- ggplot(economics, aes(x=date))
+myPlot <- myPlot + ggtitle("Personal Savings Rate: 1967-2014") + geom_line(aes(y=psavert), colour='green')
+myPlot
+```
+
+#7. Add	another	data	series	to	your	plot	to	show	the	variable	uempmed	as	a	red	line.
+```{r}
+myPlot <- ggplot(economics, aes(x=date))
+myPlot <- myPlot + ggtitle("Personal Savings Rate: 1967-2014") + geom_line(aes(y=psavert), colour='green') + geom_line(aes(y=uempmed), colour='red') 
+myPlot
+```
+
+#8. Change	the	title	of	the	plot	to	mention	both	variables.
+```{r}
+myPlot <- ggplot(economics, aes(x=date))
+myPlot <- myPlot + ggtitle("Personal Savings Rate and Median Duration of Unemployment: 1967-2014") + geom_line(aes(y=psavert), colour='green') + geom_line(aes(y=uempmed), colour='red') 
+myPlot
+```
+
+#9. You	can	modify	the	axis	labels	in	a	ggplot	with	ylab(	)	and	xlab(	)	subcommands. Change	the	axis	labeling	as	needed	to	account	for	plotting	both	psavert	and uempmed	in	the	same	window.
+```{r}
+myPlot <- myPlot + ggtitle("Personal Savings Rate and Median Duration of Unemployment: 1967-2014") + geom_line(aes(y=psavert), colour='green') + geom_line(aes(y=uempmed), colour='red') + xlab("Personal Savings Rate") + ylab("Median Duration of Unemployment")
+myPlot
+```
+
+#10. Create	one	last	plot,	creating	a	scatter	plot,	having	the	unemploy on	the	x-axis, psavert	on	the	yaxis.	Color	each	point	based	on	the	uempmed.
+```{r}
+myPlot2 <- ggplot(economics, aes(x=unemploy)) + geom_point(aes(y=uempmed, colour=uempmed))
+myPlot2
+```
+
+#11. Interpret	what	you	see	in	this	last	graph
+```{r}
+#It can be observed that most of the proportion of unemployment is highly concentrated
+#between 2 to 10 weeks. However, there are a few outliers of unemployment cases 
+#beyond 20 weeks. It is not clear which industries have lesser weeks of 
+#unemployments.
+```
+
+#12. Make	sure	your	code	has	nice	comments and an attribution statement!
