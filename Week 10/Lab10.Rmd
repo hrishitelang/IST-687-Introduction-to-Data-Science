@@ -1,0 +1,136 @@
+---
+output:
+  pdf_document: default
+  html_document: default
+---
+# Intro to Data Science Lab 10
+##### Copyright Jeffrey Stanton, Jeffrey Saltz, and Jasmina Tacheva
+
+
+```{r}
+# Enter your name here: Hrishikesh Telang
+```
+
+### Attribution statement: (choose only one and delete the rest)
+
+
+```{r}
+# 1. I did this homework by myself, with help from the book and the professor and using 
+#StackOverflow as the Internet source
+```
+
+#Instructions:	Association	rules mining,	also	known	as	market	basket	analysis,	is	an unsupervised	data	mining technique	that	discovers	patterns	in	the	form of	if-then rules. The	technique	is	“unsupervised”	in the	sense	that	there	is	no	prediction	or classification happening.	We	are	simply	trying	to	find	interesting	patterns.
+
+#In	addition	to working	with	“baskets”	of objects,	association	rules	mining	is	good	at working with	any	kind	of data	that	can	be expressed	as	lists	of	attributes.	For example,	a	trip	to	Washington	DC	might	consist of	the	following	attributes:	train, July,	morning	departure,	afternoon	arrival,	Union	Station,	first	class,	express.		
+
+#In	these	exercises	we	will work	with	a	built	in	data	set	called	groceries. Make	sure to library	the arules	and	arulesViz packages	before	running	the	following:
+```{r}
+#install.packages('arules') #Install the package 'arules'
+#install.packages('arulesViz') #Install the package 'arulesViz'
+library(arules) #Load the package 'arules'
+library(arulesViz) #Load the package 'arulesViz'
+data (Groceries) # Load data into memory
+myGroc <- Groceries # Make a copy for safety
+summary(myGroc) # What is the structure?
+```
+
+#1. Examine	the	data	structure	that	summary()	reveals.	This	is	called	a	sparse matrix	and	it	efficiently	stores	a	set	of	market	baskets	along	with	meta-data. Report	in	a	comment	about	some	of	the	item labels.
+```{r}
+summary(myGroc)
+#The sparse matrix contains 9835 rows and 169 columns
+#It also details on the most frequent items, the popular ones being whole milk,
+#other vegetables, rolls/buns, soda, and yogurt.
+#This code returns the labels along with its association rules.
+#For example, the labels 'frankfurter', 'sausage' and 'liver loaf' have the same 
+#association rules ie: the frequency of choosing meat and sausage together
+```
+
+#2. Use	the itemFrequency(myGroc) command	to	generate	a	list	of	item frequencies.	Save	that	list	in	a	new	data	object. Run str( ) on	the	data	object and	write	a	comment	describing	what	it	is.	Run sort( ) on	the	data	object	and save	the	results. Run head( ) and tail( ) on	the	sorted	object	to	show	the most	and least	frequently occurring items.	What’s	the	most	frequently purchased	item?
+```{r}
+data <- itemFrequency(myGroc)
+data #Display the data
+str(data) #It returns the overall frequency of items in a randomised order.
+sorted_data <- sort(data) #Sorting the data
+#Printing head and tail
+print("Head")
+head(sorted_data)
+print("Tail")
+tail(sorted_data)
+
+# Whole milk is the most frequently purchased item in this dataset
+```
+
+#3. Create	a	frequency	plot	with itemFrequencyPlot(myGroc, topN=20) and	confirm	that	the	plot	shows	the	most	frequently	purchased	item	with	the left-most	bar.	Write	a	comment	describing	the meaning	of	the	Y-axis.
+```{r}
+itemFrequencyPlot(myGroc, topN=20)
+
+#The Y axis signifies the frequency of the number of times the item has been selected.
+#(In other words, Y axis indicates the support.)
+#This has been taken from the myGroc dataset.
+```
+
+#4. Create	a	cross	table	with ct	<- crossTable(myGroc,	sort=TRUE).	Examine	the	first few	rows	and	columns	of ct	by	using	the	square brackets	subsetting	technique. For	example,	the	first	two rows	and	first	three	columns would	be	ct[1:2,	1:3]. Write	a	comment	describing	one	of	values.	Write	a	comment	describing	what	is on	the	diagonal	of	the	matrix.
+```{r}
+ct	<- crossTable(myGroc,	sort=TRUE)
+ct[1:2,	1:3]
+#The crosstable value is pretty straightforward. It checks the frequency for the
+#amount of items for every item in the dataset, but with subsetting, the items drill down to a 
+#2 x 3 dataset. Thus, the frequency of whole milk with other vegetables is 736, and with
+#rolls/buns it is 557 and so forth.
+```
+
+#5. Run	the	following	analysis:
+```{r}
+rules1 <- apriori(myGroc,
+parameter=list(supp=0.0008, conf=0.55),
+control=list(verbose=F),
+appearance=list(default="lhs",rhs=("bottled beer")))
+```
+
+#6. Examine	the	resulting	rule	set	with	inspect(	)	and	make	sense	of	the	results. There	should	be	four	rules	in	total.
+```{r}
+inspect(rules1)
+#It can be observed that the lift of {soda,liquor,red/blush wine}	=>	{bottled beer} 
+#is the highest, with confidence being 100%, followed by {liquor,red/blush wine}	=>	{bottled beer},
+#with lift=11.23527 and confidence as 90%. The lifts and confidences of the 
+#remaining association rules are similar, so we check the corresponding supports.
+#We can observe that the support {liquor,red/blush wine}	=>	{bottled beer} is higher
+#than {red/blush wine,napkins}	=>	{bottled beer}.
+```
+
+#7. Adjust	the	support	parameter	to	a	new	value	so	that	you	get	more	rules. Anywhere	between	10	and	30	rules	would	be	fine.	Examine	the	new	rule	set with	inspect(	).	Does	your	interpretation	of	the	situation	still	make sense?
+```{r}
+rules2 <- apriori(myGroc, parameter=list(supp=0.0006, conf=0.45),
+control=list(verbose=F),
+appearance=list(default="lhs",rhs=("bottled beer")))
+inspect(rules2)
+#Yes, the	interpretation	of the	situation	still	makes sense. This time, we have 13
+#rules that correspond to a threshold support of 0.006 and confidence of 45%.
+#The rule {soda,liquor,red/blush wine}	=>	{bottled beer} has the highest lift
+#of 12.417929 with 100% confidence, followed by lift of 11.235269 for 
+#{liquor,red/blush wine}	=>	{bottled beer} and confidence of 90%. This goes on for the remaining 
+#10 rules.
+```
+
+#8. Power User: use	mtcars	to	create	a	new	dataframe	with	factors	(e.g.,	cyl attribute).	Then	create	an	mpg	column	with	“good”	or	“bad”	(good	MPG	is above 25).	Convert	the	dataframe	to	a	transactions	dataset	and	then	predict rules	for having	bad	MPG.
+```{r}
+#str(mtcars)
+#Creating mtattr attribute of only factors
+mtattr <- mtcars[ ,c("cyl", "vs", "am", "gear", "carb")]
+#I used a function ifelse from StackOverflow to get "good" and "bad" labels
+mtattr$goodorbadmpg <- ifelse(mtcars$mpg > 25, "good", "bad")
+#mtattr
+
+str(mtattr) #Displaying the whole structure of mtattr
+mtmatr <- as(mtattr, "transactions") #Converting the dataframe to a transactions dataset 
+
+#Using apriori to predict rules	for having bad	MPG.
+rules3 <- apriori(mtmatr, parameter = list(supp=0.25, conf= 0.80, minlen=4), appearance=list(default="lhs", rhs="goodorbadmpg=bad"), control=list(verbose=F))
+summary(rules3) #Displying summary
+inspect(rules3) #Displaying the whole transactions dataset
+
+#The whole set of commands gives me a transactions table of 9 rules with equal lifts and 
+#confidences, but with varying supports. {cyl=[4.67,8],vs=[0,1],am=[0,1]}	=>	{goodorbadmpg=bad}	
+#has a support of 0.65625	
+```
+
