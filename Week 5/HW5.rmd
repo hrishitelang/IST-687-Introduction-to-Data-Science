@@ -1,0 +1,127 @@
+---
+output:
+  pdf_document: default
+  html_document: default
+---
+# Intro to Data Science - HW 5
+
+##### Copyright 2021, Jeffrey Stanton, Jeffrey Saltz, and Jasmina Tacheva
+
+
+```{r}
+# Enter your name here: Hrishikesh Telang
+```
+
+### Attribution statement: (choose only one and delete the rest)
+
+
+```{r}
+# 1. I did this homework by myself, with help from the book and the professor.
+```
+
+Reminders of things to practice from previous weeks: <br>
+Descriptive statistics: 	mean( ) max( ) min( )<br>
+Coerce to numeric:		as.numeric( )<br>
+
+## Part 1: Use the Starter Code 
+
+Below, I have provided a starter file to help you. <br>
+
+Each of these lines of code **must be commented** (the comment must that explains what is going on, so that I know you understand the code and results).
+
+
+```{r}
+library(RCurl) #We are calling the Rcurl package
+library(jsonlite) #We are calling the jsonlite package
+dataset <- getURL("https://intro-datascience.s3.us-east-2.amazonaws.com/role.json") #We are calling the JSON file and storing in dataset
+readlines <- jsonlite::fromJSON(dataset) #This function converts JSON data to an R object
+df <- readlines$objects$person #This line stores all the JSON data into df
+```
+
+A.	Explore the **df** dataframe (e.g., using head() or whatever you think is best).
+
+
+```{r}
+head(df)
+tail(df)
+View(df)
+```
+
+B.	Explain the dataset <br>
+o	What is the dataset about? <br>
+o	How many rows are there and what does a row represent?<br>
+o	How many columns and what does each column represent?<br>
+
+```{r}
+#1. The dataset contains the information of all the US Senators
+#2. There are 100 rows and every row represents a senator
+#3. There are 17 columns and every column represents the unique ID, attributes (or personal information of each senator)
+```
+
+## Part 2: Investigate the resulting dataframe 
+
+C.	How many senators are women? 
+
+
+```{r}
+#Using nrow
+nrow(df[df$gender == 'female',])
+
+#Using sum
+sum(df$gender == 'female')
+```
+
+D.	How many senators have a YouTube account?  
+
+
+```{r}
+#Using sum
+sum(is.na(df$youtubeid) == FALSE)
+
+#Using nrow
+nrow(df[is.na(df$youtubeid) == FALSE,])
+```
+
+E.	How many women senators have a YouTube account?
+
+
+```{r}
+nrow(df[df$gender == 'female' & is.na(df$youtubeid) == FALSE,])
+```
+
+F.	Create a new dataframe called **youtubeWomen** that only includes women senators who have a YouTube account.   
+
+
+```{r}
+youtubeWomen <- df[df$gender == 'female' & is.na(df$youtubeid) == FALSE,]
+View(youtubeWomen)
+```
+
+G.	What does running this line of code do? Explain in a comment: 
+
+
+```{r}
+youtubeWomen$year <- substr(youtubeWomen$birthday,1,4)
+#The code of line essentially subsets the year from the 'birthday' column and adds it in a new 'year' column
+View(youtubeWomen)
+```
+
+H.	Use this new variable to calculate the mean **birthyear** in **youtubeWomen**. <br>
+**Hint:** You may need to convert it to numeric first.
+
+
+```{r}
+youtubeWomen$year <- as.numeric(as.character(youtubeWomen$year))
+mean(youtubeWomen$year)
+```
+
+I.	Make a histogram of the **birthyears** of senators in **youtubeWomen**. Add a comment describing the shape of the distribution.
+
+
+```{r}
+hist(youtubeWomen$year,
+     main='Distribution of the age of the Female Senators who are on YouTube',
+     xlab='Birth Years')
+
+#The shape of the bell curve is slightly shifted towards the left, which means that there is a greater frequency of older female senators
+```

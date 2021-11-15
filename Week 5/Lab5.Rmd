@@ -1,0 +1,147 @@
+---
+output:
+  pdf_document: default
+  html_document: default
+---
+# Intro to Data Science - Lab 5
+
+## IST687 Section M003
+### Professor Anderson
+
+```{r}
+# Enter your name here: Hrishikesh Telang
+```
+
+###Select one of the below and add needed information
+```{r}
+# 1. I did this homework by myself, with help from the book and the professor.
+```
+
+#Instructions:	JSON	(JavaScript	Object	Notation)	provides	a	transparent,	user	friendly data	exchange	format	that	many	organizations	use	to	make	their	data	available	over	the	web.	JSON	is	human	readable,	but	is	also	highly	structured,	and	its	support	for	nested	data	structures	makes	it	highly	flexible.	Today	we	will use	JSON	to obtain	data	from	the	NYC	CitiBike	project.	The	CitiBike	project	provides	an	application	programming	interface	(API)	that	members	of	the	public	can	access to	get	up-todate	information	on	the	status	of	more	than	800	bike	stations.	
+
+#You	may	need	to	install	the	RCurl	and	jsonlite	packages	to	get	the	code	to	work. 
+```{r}
+#install.packages('jsonlite')
+library(jsonlite)
+#install.packages('RCurl')
+library(RCurl)
+station_link <- 'https://gbfs.citibikenyc.com/gbfs/en/station_status.json'
+apiOutput <- getURL(station_link)
+apiData <- fromJSON(apiOutput)
+stationStatus <- apiData$data$stations
+cols <- c('num_bikes_disabled','num_docks_disabled', 'station_id',
+ 'num_ebikes_available', 'num_bikes_available', 'num_docks_available')
+stationStatus = stationStatus[,cols]
+```
+
+#1. Explain	what you	see	if	you	type	in	the	station_link	URL	into	a	browser	(in	a	comment,	write	what	you	see)
+```{r}
+#The data is not differentiable, its basically a dictionary of key value pairs
+```
+
+#2. Provide a comment explaining each line of code.	
+```{r}
+#install.packages('jsonlite') #This installs the package 'jsonlite'.
+library(jsonlite) #We are calling the package 'jsonlite'.
+#install.packages('RCurl') #This installs the package 'RCurl'.
+library(RCurl) #We are calling the package 'RCurl'.
+station_link <- 'https://gbfs.citibikenyc.com/gbfs/en/station_status.json' #We are saving the link that redirects to a JSON file and saving it in 'station_link'
+apiOutput <- getURL(station_link) #We are getting the api object using getURL()
+apiData <- fromJSON(apiOutput) #We are grabbing the values of data from apiOutput using JSON
+stationStatus <- apiData$data$stations #We are storing all the tuples of stations stored as key value 'stations'
+cols <- c('num_bikes_disabled','num_docks_disabled', 'station_id',
+ 'num_ebikes_available', 'num_bikes_available', 'num_docks_available')
+#We are only choosing selected columns from the json folder
+stationStatus = stationStatus[,cols] #We are updating the stationStatus dataframe accordingly
+```
+
+#3. Use	str() to find	out	the	structure	of	apiOutput	and	apiData.	Report	(via	a comment)	what	you	found	and	explain the	difference	between	these	two	objects.
+```{r}
+print('API Output')
+str(apiOutput)
+print('API Data')
+str(apiData)
+
+#The API Output is showing an unclean and unstructured output of keys and its corresponding values whereas the API Data is returning a structured output in the form of a dataframe. This dataframe is returning the type of values entered along with the number of observations in each column.
+```
+
+#4. The	apiOutput object can also be examined with a	custom	function	from	the jsonlite	package	called	prettify().	Run	this	command	and	explain what	you	found (in	a	comment).
+```{r}
+print('API Output')
+prettify(apiOutput)
+
+#The prettify() function attempts to superficially beautify the apiOutput that we collect from the dataset. It tabs all the attributes within the curly brackets so that we can identify the key value pairs better.
+```
+
+#5. Explain stationStatus (what type of object, what information is available) 
+```{r}
+summary(stationStatus)
+
+#stationStatus is displaying the median, mean, minimum and maximum values of each of the columns. Station ID is a character datatype.
+```
+
+#This	is	the	end	of	the	first	breakout	session.	Please	send	a	chat	message	to	your	instructor	when	you	are	finished.
+
+#Second	Breakout Session Starts	Here
+
+#6. Generate	a	histogram	of	the	number	of	docks	available
+```{r}
+hist(stationStatus$num_docks_available,
+     main='Distribution of number of docks available',
+     xlab='Sample population means',
+     simplify=TRUE)
+```
+
+#7. Generate	a	histogram	of	the	number	of	bikes	available
+```{r}
+hist(stationStatus$num_bikes_available,
+     main='Distribution of number of bikes available',
+     xlab='Sample population means',
+     simplify = TRUE)
+```
+
+#8. How	many stations have at least one ebike?
+```{r}
+#Using sum
+sum(stationStatus$num_ebikes_available > 0)
+
+#Using nrow
+nrow(stationStatus[stationStatus$num_ebikes_available > 0,])
+```
+
+#9. Explore	stations	with	at	least	one	ebike	by	create	a	new	dataframe,	that	only	has stations	with	at	least	one	eBike.
+```{r}
+library(tidyverse)
+new_DF <- stationStatus %>% filter(num_ebikes_available >= 1)
+new_DF
+```
+
+#10. Calculate	the	mean	of	‘num_docks_available’	for	this	new	dataframe.
+```{r}
+mean(new_DF$num_docks_available)
+```
+
+#11. Calculate	the	mean	of	‘num_docks_available’	for	for	the	full	‘stationStatus’ dataframe.	In	a	comment,	explain	how	different	are	the	two	means?
+```{r}
+mean(stationStatus$num_docks_available)
+
+#The mean of new_DF is not quite different from stationStatus, however, it is lesser than the latter because new_DF is a smaller sample space, making its mean less accurate and more skewed to the left as compared to that of stationStatus.
+```
+
+#12. Create	a	new	attribute,	called	‘stationSize’,	which	is	the	total	number	of	“slots” available	for	a	bike	(that	might,	or	might	not,	have	a	bike	in	it	now).	Run	a	histogram	on	this	variable	and	review	the	distribution.
+```{r}
+new_DF$stationSize <- new_DF$num_bikes_disabled + new_DF$num_docks_disabled + 
+        new_DF$num_ebikes_available + new_DF$num_bikes_available + new_DF$num_docks_available
+new_DF
+```
+
+#13. Use the plot()	command	to produce an	X-Y	scatter	plot	with	the	number	of occupied	docks	on	the	X-axis	and	the	number	of	available	bikes on	the	Y-axis.	Explain the	results plot.
+```{r}
+plot(new_DF$num_docks_disabled, new_DF$num_bikes_available,
+     main='Scatter Plot Distribution',
+     xlab='Number of occupied docks',
+     ylab='Number of available bikes')
+
+#It can be observed that there are a greater number of available bikes for zero occupied docks
+```
+
