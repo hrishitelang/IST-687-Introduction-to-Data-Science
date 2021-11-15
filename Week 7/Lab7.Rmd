@@ -1,0 +1,156 @@
+---
+output:
+  pdf_document: default
+  html_document: default
+---
+# Intro to Data Science - Lab 7 - Using ggplot function to build complex data displays
+
+## IST687 Section M003
+### Professor Anderson
+
+```{r}
+# Enter your name here: Hrishikesh Telang
+```
+
+###Select one of the below and add needed information
+```{r}
+# 1. I did this homework by myself, with help from the book and the professor.
+```
+
+#Instructions: “Geology rocks but geography is where it's at. . .” (famous dad joke). In a global economy, geography has an important influence on everything from manufacturing to marketing to transportation. As a result, most data scientists will have to work with map data at some point in their careers. An add-on to the ggplot2 package, called ggmap, provides powerful tools for plotting and shading maps. Make sure to install the maps, mapproj, and ggmap packages before running the following: Please include your name and an attribution statement (see syllabus).
+
+```{r}
+library(ggplot2);
+#install.packages('maps')
+library(maps);
+#install.packages('ggmap')
+library(ggmap);
+#install.packages('mapproj')
+library(mapproj)
+
+us <- map_data("state")
+us$state_name <- tolower(us$region)
+
+map <- ggplot(us, aes(map_id= state_name))
+map <- map + aes(x=long, y=lat, group=group) + geom_polygon(fill = "white", color = "black") 
+map <- map + expand_limits(x=us$long, y=us$lat)
+map <- map + coord_map() + ggtitle("USA Map")
+map
+```
+
+#1.	Add a comment for each line of code, explaining what that line of code does.
+```{r}
+library(ggplot2); #call the library ggplot2
+#install.packages('maps') #install packages maps
+library(maps); #call the library maps
+#install.packages('ggmap') #install packages ggmap
+library(ggmap); #call the library ggmap
+#install.packages('mapproj') #install packages mapproj
+library(mapproj) #call the packages mapproj
+
+us <- map_data("state") #This code turns data from the maps package in to a data frame suitable for plotting with ggplot2.
+us$state_name <- tolower(us$region) #the us state_name is lowercased to ensure consistency while mapping these regions on to the console
+
+map <- ggplot(us, aes(map_id= state_name)) #Initialize map plot with map_id as state_name
+map <- map + aes(x=long, y=lat, group=group) + geom_polygon(fill = "white", color = "black") #Introduces aesthetic features of latitude, longitude, fill and color.
+map <- map + expand_limits(x=us$long, y=us$lat) #The plot limits get expanded using this command
+map <- map + coord_map() + ggtitle("USA Map") #Add the title
+map #Display the map
+```
+
+#2.	The map you just created fills in the area of each state in white while outlining it with a thin black line. Use the fill= and color= commands inside the call to geom_polygon( ) to reverse the color scheme
+```{r}
+us <- map_data("state")
+us$state_name <- tolower(us$region) #consistency
+
+map <- ggplot(us, aes(map_id= state_name))
+map <- map + aes(x=long, y=lat, group=group) + geom_polygon(fill = "black", color = "white") 
+map <- map + expand_limits(x=us$long, y=us$lat)
+map <- map + coord_map() + ggtitle("USA Map")
+map
+```
+
+
+#Now run the following code:
+```{r}
+ny_counties <- map_data("county","new york")
+ggplot(ny_counties) + aes(long,lat, group=group) + geom_polygon(fill = "white", color = "black")
+```
+
+#3.	Just as in step 2, the map you just created fills in the area of each county in black while outlining it with a thin white lines. Use the fill= and color= commands inside the call to geom_polygon( ) to reverse the color scheme.
+```{r}
+ny_counties <- map_data("county","new york")
+ggplot(ny_counties) + aes(long,lat, group=group) + geom_polygon(fill = "black", color = "white")
+```
+
+#4.	Run head(ny_counties) to verify how the county outline data looks.
+```{r}
+head(ny_counties)
+```
+
+#5.	Make a copy of your code from step 3 and add the following subcommand to your ggplot( ) call (don’t forget to put a plus sign after the geom_polygon( ) statement to tell R that you are continuing to build the command):
+```{r}
+ny_counties <- map_data("county","new york")
+ggplot(ny_counties) + aes(long,lat, group=group) + geom_polygon(fill = "black", color = "white") + coord_map(projection = "mercator")
+```
+
+#In what way is the map different from the previous map. Be prepared to explain what a Mercator projection is. 
+```{r}
+#The current map is illustrated using the mercator projection whereas the previous one was illustrated using a standard default sized projection. A Mercator projection is a standard map projection which is currently distributed across the globe for navigation in which the map is conformal ie: every angle between two curves that cross each other on Earth (a sphere or an ellipsoid) is preserved in the image of the projection. This makes the map more accurate. 
+```
+
+#6.	Grab a copy of the nyData.csv data set from: https://intro-datascience.s3.us-east-2.amazonaws.com/nyData.csv
+```{r}
+data <- "https://intro-datascience.s3.us-east-2.amazonaws.com/nyData.csv"
+```
+
+#Read that data set into R with read_csv(). This will require you have installed and libraried the readr package. The next step assumes that you have named the resulting data frame “nyData.”
+```{r}
+library(readr)
+nyData <- read_csv(data)
+```
+
+#7.	Next, merge your ny_counties data from the first set of questions with your new nyData data frame, with this code:
+```{r}
+mergeNY <- merge(ny_counties,nyData,
+                 all.x=TRUE,by.x="subregion",by.y="county")
+```
+
+#8.	Run head(mergeNY) to verify how the merged data looks.
+```{r}
+head(mergeNY)
+```
+
+#9.	Now drive the fill color inside each county by adding the fill aesthetic inside of your geom_polygon( ) subcommand (fill based on the pop2000).
+```{r}
+ggplot(mergeNY) + aes(long,lat, group=group) + geom_polygon(aes(fill = pop2000), color = "white") + coord_map(projection = "mercator")
+```
+
+#10. Extra (not required):
+#a.	Read in the following JSON datasets:
+'https://gbfs.citibikenyc.com/gbfs/en/station_information.json'
+'https://gbfs.citibikenyc.com/gbfs/en/station_status.json'
+```{r}
+library(jsonlite)
+library(RCurl)
+station_info <- 'https://gbfs.citibikenyc.com/gbfs/en/station_information.json'
+station_link <- 'https://gbfs.citibikenyc.com/gbfs/en/station_status.json'
+apiData1 <- fromJSON(getURL(station_info))
+apiData2 <- fromJSON(getURL(station_link))
+```
+
+#b.	Merge the datasets, based on ‘station_id’
+```{r}
+#merge_station <- merge(apiData1, apiData2, all.x=TRUE, by.x="apiData1$data$stations$station_id",by.y="apiData2$data$stations$station_id")
+```
+
+#c.	Clean the merged dataset to only include useful information
+#For this work, you only need lat, lon and the number of bikes available
+```{r}
+
+```
+
+#d.	Create a stamen map using ‘get_stamenmap()’
+#Have the limits of the map be defined by the lat and lot of the stations
+#e.	Show the stations, as points on the map.
+#f.	Show the number of bikes available as a color
