@@ -1,10 +1,15 @@
+---
+output:
+  pdf_document: default
+  html_document: default
+---
 # Intro to Data Science - HW 10
 
 ##### Copyright 2021, Jeffrey Stanton, Jeffrey Saltz, and Jasmina Tacheva
 
 
 ```{r}
-# Enter your name here: 
+# Enter your name here: Hrishikesh Telang
 ```
 
 ### Attribution statement: (choose only one and delete the rest)
@@ -12,8 +17,6 @@
 
 ```{r}
 # 1. I did this homework by myself, with help from the book and the professor.
-# 2. I did this homework with help from the book and the professor and these Internet sources:
-# 3. I did this homework with help from <Name of another student> but did not cut and paste any code.
 ```
 
 **Association mining** can be applied to many data problems beyond the well-known example of **finding relationships between different products in customer shopping data**. In this homework assignment, we will explore **real data** from the banking sector and look for **patterns associated with the likelihood of responding positively to a direct marketing campaign and signing up for a term deposit with the bank (stored in the variable “y”)**. <br>
@@ -30,14 +33,22 @@ In situations like this, consider using either read.csv or read.table, with two 
 
 
 ```{r}
-
+library(readr) #Initiate readr library
+bank <- read.csv('https://intro-datascience.s3.us-east-2.amazonaws.com/bank-full.csv', 
+                 sep=";", header=TRUE)
+#read csv file from the internet
+head(bank) #Show the head of the bank
+tail(bank) #Show the tail of the bank
 ```
 
 Make sure there are **41,188** rows and **21** columns in your **bank** df.
 
 
 ```{r}
-
+#To cross check that, we have used str(), nrow() and ncol()
+str(bank) #returns the structure (datatypes) of the bank dataset
+nrow(bank) #returns number of rows
+ncol(bank) #returns number of columns
 ```
 
 B.	Next, we will focus on some key factor variables from the dataset, and convert a few numeric ones to factor variables. Execute the following command.  Write a comment describing how the conversion for each numeric variable works and what are the variables in the resulting dataframe.
@@ -57,21 +68,30 @@ C.	Count the number of successful term deposit sign-ups, using the table( ) comm
 
 
 ```{r}
-
+table(bank_new$success) #returns the number of rows that have "no" and "yes" labels
 ```
 
 D.	Express the results of problem C as percentages by sending the results of the table( ) command into the prop.table( ) command.
 
 
 ```{r}
-
+prop.table(table(bank_new$success)) #returns the percentage of the number of rows
+#with "no" and "yes" labels
 ```
 
 E.	Using the same techniques, show the percentages for the **marital** and **housing_loan** variables as well.
 
 
 ```{r}
+print("%%%%marital%%%%")
+table(bank_new$marital) #returns the number of rows that have "no" and "yes" labels
+prop.table(table(bank_new$marital))
+#returns the percentage of the number of rows with "no" and "yes" labels
 
+print("%%%%housing_loan%%%%")
+table(bank_new$housing_loan) #returns the number of rows that have "no" and "yes" labels
+prop.table(table(bank_new$housing_loan))
+#returns the percentage of the number of rows with "no" and "yes" labels
 ```
 
 ## Part 2: Coerce the data frame into transactions
@@ -80,21 +100,33 @@ F.	Install and library two packages: **arules** and **arulesViz**.
 
 
 ```{r}
-
+#install.packages('arules')
+#install.packages('arulesViz')
+library(arules)
+library(arulesViz)
 ```
 
 G.	Coerce the **bank_new** dataframe into a **sparse transactions matrix** called **bankX**.
 
 
 ```{r}
-
+bankX <- as(bank_new, "transactions")
+bankX
 ```
 
 H.	Use the itemFrequency( ) and itemFrequencyPlot( ) commands to explore the contents of **bankX**. What do you see?
 
 
 ```{r}
+itemFrequency(bankX) #Shows item frequency for each categorical value
+itemFrequencyPlot(bankX) #Plots the frequency distribution
 
+# I see a frequency graph of all the occurences of attributes from the sparse 
+#transactions matrix
+#The Y axis signifies the frequency of the number of times the item has been selected.
+#(In other words, Y axis indicates the support.)
+#Based on this observation, attributes such as contacted_before_this_campaign has 
+#had the highest occurence, followed by success, then marital and so forth.
 ```
 
 I.	This is a fairly large dataset, so we will explore only the first 10 observations in the **bankX** transaction matrix: 
@@ -102,13 +134,17 @@ I.	This is a fairly large dataset, so we will explore only the first 10 observat
 
 ```{r}
 inspect(bankX[1:10]) 
+# With this code, we are exploring only the first 10 observations in the 'bankX' transaction matrix
 ```
 
 Explain the difference between **bank_new** and **bankX** in a block comment:
 
-
 ```{r}
-
+#bank_new is the new dataset that is returned after all the variables which looked
+#categorical in nature are converted into factor variables, whereas, bankX is the
+#a sparse transaction matrix that results from the categorical valuables of bank_new.
+#It contains the frequency values as a probability distribution of all the 
+#different columns along with their categorical values. 
 ```
 
 ## Part 3: Use arules to discover patterns
@@ -121,19 +157,28 @@ J.	Use **apriori** to generate a set of rules with support over 0.005 and confid
 
 
 ```{r}
-
+#I have listed the supp=0.005 and conf= 0.3 to satisfy the question of the prompt.
+#I also used success=yes to predict who successfully signed up for a term deposit.
+rules3 <- apriori(bank_new, parameter = list(supp=0.005, conf= 0.3), 
+                  appearance=list(default="lhs", rhs="success=yes"), 
+                  control=list(verbose=F))
 ```
 
 K.	Use inspect() to review of the **ruleset**. 
 
 
 ```{r}
-
+inspect(rules3)
 ```
 
 L.	Use the output of inspect( ) or inspectDT( ) and describe **any 2 rules** the algorithm found.  
 
 
 ```{r}
-
+#The rule {job=student, marital=single, young=TRUE, contacted_before_this_campaign=FALSE} 
+#=> {success=yes} shows a lift of 2.870582. This is the highest value computed for the given
+#rule in the ruleset. This is followed by two second highest rules {job=student, marital=single} 
+#=> {success=yes} and {job=student, marital=single, contacted_before_this_campaign=FALSE} 
+#=> {success=yes} with equal lifts, confidences and supports and will be treated 
+#equally based on the conditions set at training the apriori model.
 ```
