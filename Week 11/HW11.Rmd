@@ -1,0 +1,245 @@
+---
+output:
+  word_document: default
+  html_document: default
+  pdf_document: default
+---
+# Intro to Data Science - HW 11
+##### Copyright 2021, Jeffrey Stanton, Jeffrey Saltz, Christopher Dunham, and Jasmina Tacheva
+
+
+```{r}
+# Enter your name here: Hrishikesh Telang
+```
+
+### Attribution statement: (choose only one and delete the rest)
+
+
+```{r}
+# 1. I did this homework by myself, with help from the book and the professor.
+```
+
+**Text mining** plays an important role in many industries because of the prevalence of text in the interactions between customers and company representatives. Even when the customer interaction is by speech, rather than by chat or email, speech to text algorithms have gotten so good that transcriptions of these spoken word interactions are often available. To an increasing extent, a data scientist needs to be able to wield tools that turn a body of text into actionable insights. In this homework, we explore a real **City of Syracuse dataset** using the **quanteda** and **quanteda.textplots** packages. Make sure to install the **quanteda** and **quanteda.textplots** packages before following the steps below:<br>
+
+## Part 1: Load and visualize the data file  
+A.	Take a look at this article: https://samedelstein.medium.com/snowplow-naming-contest-data-2dcd38272caf and write a comment in your R script, briefly describing what it is about.<br>
+
+
+```{r}
+#This article is about a snowplowing naming contest organized my Mayor Walsh of Syracuse. 
+#The city of Syracuse purchased 10 new snowplows that needed to be named,
+#so, everyone were invited to draft their own creative names for these snowplows. 
+#The city received close to ~1910 names and announced 10 winning names in December.
+```
+
+B.	Read the data from the following URL into a dataframe called **df**:
+https://intro-datascience.s3.us-east-2.amazonaws.com/snowplownames.csv
+
+
+```{r}
+library(tidyverse)
+library(readr)
+df <- read_csv('https://intro-datascience.s3.us-east-2.amazonaws.com/snowplownames.csv')
+
+```
+
+C.	Inspect the **df** dataframe – which column contains an explanation of the meaning of each submitted snowplow name? 
+
+
+```{r}
+str(df)
+head(df)
+tail(df)
+```
+
+D. Transform that column into a **document-feature matrix**, using the **corpus()**, **tokens(), tokens_select()**, and **dfm()** functions from the quanteda package. Do not forget to **remove stop words**.
+
+
+```{r}
+#install.packages("quanteda")
+library(quanteda)
+tweetCorpus <- corpus(df$meaning, docnames=df$submission_number)
+tweetCorpus
+
+toks <- tokens(tweetCorpus, remove_punct=TRUE)
+#This code removes punctuation.
+
+toks_nostop <- tokens_select(toks, pattern = stopwords("en"), selection = "remove")
+#We take our list of tokens and remove all the stopwords such as 'I", 'a' as we don't need them.
+
+dfDFM <- dfm(toks_nostop, tolower = TRUE)
+dfDFM
+#Document-feature matrix of: 1,907 documents, 2,807 features (99.83% sparse).
+```
+
+E.	Plot a **word cloud** where a word is only represented if it appears **at least 2 times** in the corpus. **Hint:** use **textplot_wordcloud()** from the quanteda.textplots package:
+
+
+```{r}
+#install.packages("quanteda.textplots")
+library(quanteda.textplots)
+textplot_wordcloud(dfDFM, min_count = 1)
+#The wordcloud portrays the frequency of a given word, shown by its size in the diagram. 
+#Snow and '1/2' is the most frequent strings and this is shown by its size in the wordcloud. 
+#Only words which have appeared atleast twice have been included
+```
+
+F.	Next, **increase the minimum count to 10**. What happens to the word cloud? **Explain in a comment**. 
+
+
+```{r}
+textplot_wordcloud(dfDFM, min_count = 10)
+```
+
+G.	What are the top 10 words in the word cloud?
+
+**Hint**: use textstat_frequency in the quanteda.textstats package
+
+
+```{r}
+#install.packages("quanteda.textstats")
+library(quanteda.textstats)
+library(quanteda)
+head(textstat_frequency(dfDFM))
+```
+
+H.	Explain in a comment what you observed in the sorted list of word counts. 
+
+
+```{r}
+#We see the 10 most freuqntly occuring words/strings. The string '1/2' is the most frequently used subset
+```
+
+## Part 2: Analyze the sentiment of the descriptions
+
+###Match the review words with positive and negative words
+
+I.	Read in the list of positive words (using the scan() function), and output the first 5 words in the list. 
+
+https://intro-datascience.s3.us-east-2.amazonaws.com/positive-words.txt
+<br>
+
+There should be 2006 positive words words, so you may need to clean up these lists a bit. 
+
+
+```{r}
+URL <- 'https://intro-datascience.s3.us-east-2.amazonaws.com/positive-words.txt'
+posWords <- scan(URL, character(0), sep = "\n")
+posWords <- posWords[-1:-34]
+#posWords
+#This does a frequency match between a positive word and all the documents in corpusDFM.
+#Only the positive words from the original corpus and the URL will be included
+```
+
+J. Do the same for the  the negative words list (there are 4783 negative words): <br>
+<br>
+https://intro-datascience.s3.us-east-2.amazonaws.com/negative-words.txt <br>
+
+```{r}
+URL <- 'https://intro-datascience.s3.us-east-2.amazonaws.com/negative-words.txt'
+negWords <- scan(URL, character(0), sep = "\n")
+negWords <- negWords[-1:-34]
+#negWords
+```
+
+J.	Using **dfm_match()** with the dfm and the positive word file you read in, and then **textstat_frequency()**, output the 10 most frequent positive words
+
+
+```{r}
+posDFM <- dfm_match(dfDFM, posWords) 
+#This code matches the positive words with the tweetDFM dataframe
+posFreq <- textstat_frequency(posDFM)
+#This code tells the frequency of positive words in the documents
+posFreq[1:10,]
+```
+
+M.	Use R to print out the total number of positive words in the name explanation.
+
+
+```{r}
+count(data.frame(textstat_frequency(posDFM)))[1, 'n']
+```
+
+N.	Repeat that process for the negative words you matched. Which negative words were in the name explanation variable, and what is their total number?
+
+
+```{r}
+negDFM <- dfm_match(dfDFM, negWords)
+#This code matches the negative words with the tweetDFM dataframe
+negFreq <- textstat_frequency(negDFM)
+#This code tells the frequency of negative words in the documents.
+negFreq
+#Words such as funny, cold, twist, abomiable are in the negative words list in the name variable.
+#Funny is the most negative word used.
+```
+
+O.	Write a comment describing what you found after exploring the positive and negative word lists. Which group is more common in this dataset?
+
+
+```{r}
+count(data.frame(textstat_frequency(negDFM)))[1, 'n']
+#Positive words are more common as we have more numbers with higher frequency for each word.
+```
+
+X. Complete the function below, so that it returns a sentiment score (number of positive words - number of negative words)
+
+
+```{r}
+library(tidyverse)
+library(quanteda.textstats)
+library(quanteda)
+
+doMySentiment <- function(posWords, negWords, stringToAnalyze ) {
+  
+  toks <- tokens(stringToAnalyze,	remove_punct=TRUE)
+  toks_nostop <- tokens_select(toks,	pattern	=	stopwords("en"),	
+                             selection	=	"remove")
+  meaningDFM <- dfm(toks_nostop)
+  
+  out<-tryCatch(
+  
+  {
+    posDFM <- dfm_match(meaningDFM, posWords)
+    posFreq <- textstat_frequency(posDFM)
+    sum_pos<- sum(posFreq$frequency)
+  },
+  error=function(err){
+    return (0)
+  }
+  )
+ 
+  out1<-tryCatch(
+  
+  {
+    negDFM <- dfm_match(meaningDFM, negWords)
+    negFreq <- textstat_frequency(negDFM)
+    sum_neg<-(sum(negFreq$frequency))
+  },
+  error=function(err){
+    return (0)
+  }
+  )
+ sentimentScore =ifelse(out==0,ifelse(out1==0,0,-out1),
+                         ifelse(out1==0,out,out-out1))
+
+  return(sentimentScore)
+}
+```
+
+X. Test your function with the string "This book is horrible"
+
+
+```{r}
+doMySentiment(posWords, negWords, "This book is horrible")
+```
+
+Use the syuzhet package, to calculate the sentiment of the same phrase ("This book is horrible"), using syuzhet's **get_sentiment()** function, using the afinn method. In AFINN, words are scored as integers from -5 to +5:
+
+
+
+```{r}
+#install.packages("syuzhet")
+library(syuzhet)
+
+get_sentiment("This book is horrible", method="afinn")
+```

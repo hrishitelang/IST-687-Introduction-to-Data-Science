@@ -1,0 +1,929 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+]{article}
+\usepackage{amsmath,amssymb}
+\usepackage{lmodern}
+\usepackage{ifxetex,ifluatex}
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\hypersetup{
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+\urlstyle{same} % disable monospaced font for URLs
+\usepackage[margin=1in]{geometry}
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\usepackage{graphicx}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\ifluatex
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+
+\author{}
+\date{\vspace{-2.5em}}
+
+\begin{document}
+
+\hypertarget{intro-to-data-science---hw-11}{%
+\section{Intro to Data Science - HW
+11}\label{intro-to-data-science---hw-11}}
+
+\hypertarget{copyright-2021-jeffrey-stanton-jeffrey-saltz-christopher-dunham-and-jasmina-tacheva}{%
+\subparagraph{Copyright 2021, Jeffrey Stanton, Jeffrey Saltz,
+Christopher Dunham, and Jasmina
+Tacheva}\label{copyright-2021-jeffrey-stanton-jeffrey-saltz-christopher-dunham-and-jasmina-tacheva}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Enter your name here: Hrishikesh Telang}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{attribution-statement-choose-only-one-and-delete-the-rest}{%
+\subsubsection{Attribution statement: (choose only one and delete the
+rest)}\label{attribution-statement-choose-only-one-and-delete-the-rest}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# 1. I did this homework by myself, with help from the book and the professor.}
+\end{Highlighting}
+\end{Shaded}
+
+\textbf{Text mining} plays an important role in many industries because
+of the prevalence of text in the interactions between customers and
+company representatives. Even when the customer interaction is by
+speech, rather than by chat or email, speech to text algorithms have
+gotten so good that transcriptions of these spoken word interactions are
+often available. To an increasing extent, a data scientist needs to be
+able to wield tools that turn a body of text into actionable insights.
+In this homework, we explore a real \textbf{City of Syracuse dataset}
+using the \textbf{quanteda} and \textbf{quanteda.textplots} packages.
+Make sure to install the \textbf{quanteda} and
+\textbf{quanteda.textplots} packages before following the steps below:
+
+\hypertarget{part-1-load-and-visualize-the-data-file}{%
+\subsection{Part 1: Load and visualize the data
+file}\label{part-1-load-and-visualize-the-data-file}}
+
+\begin{enumerate}
+\def\labelenumi{\Alph{enumi}.}
+\tightlist
+\item
+  Take a look at this article:
+  \url{https://samedelstein.medium.com/snowplow-naming-contest-data-2dcd38272caf}
+  and write a comment in your R script, briefly describing what it is
+  about.
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\#This article is about a snowplowing naming contest organized my Mayor Walsh of Syracuse. }
+\CommentTok{\#The city of Syracuse purchased 10 new snowplows that needed to be named,}
+\CommentTok{\#so, everyone were invited to draft their own creative names for these snowplows. }
+\CommentTok{\#The city received close to \textasciitilde{}1910 names and announced 10 winning names in December.}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{enumerate}
+\def\labelenumi{\Alph{enumi}.}
+\setcounter{enumi}{1}
+\tightlist
+\item
+  Read the data from the following URL into a dataframe called
+  \textbf{df}:
+  \url{https://intro-datascience.s3.us-east-2.amazonaws.com/snowplownames.csv}
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(tidyverse)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## -- Attaching packages --------------------------------------- tidyverse 1.3.1 --
+\end{verbatim}
+
+\begin{verbatim}
+## v ggplot2 3.3.5     v purrr   0.3.4
+## v tibble  3.1.6     v dplyr   1.0.7
+## v tidyr   1.1.4     v stringr 1.4.0
+## v readr   2.1.0     v forcats 0.5.1
+\end{verbatim}
+
+\begin{verbatim}
+## -- Conflicts ------------------------------------------ tidyverse_conflicts() --
+## x dplyr::filter() masks stats::filter()
+## x dplyr::lag()    masks stats::lag()
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(readr)}
+\NormalTok{df }\OtherTok{\textless{}{-}} \FunctionTok{read\_csv}\NormalTok{(}\StringTok{\textquotesingle{}https://intro{-}datascience.s3.us{-}east{-}2.amazonaws.com/snowplownames.csv\textquotesingle{}}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Rows: 1907 Columns: 5
+\end{verbatim}
+
+\begin{verbatim}
+## -- Column specification --------------------------------------------------------
+## Delimiter: ","
+## chr (3): submitter_name_anonymized, snowplow_name, meaning
+## dbl (1): submission_number
+## lgl (1): winning_name
+\end{verbatim}
+
+\begin{verbatim}
+## 
+## i Use `spec()` to retrieve the full column specification for this data.
+## i Specify the column types or set `show_col_types = FALSE` to quiet this message.
+\end{verbatim}
+
+\begin{enumerate}
+\def\labelenumi{\Alph{enumi}.}
+\setcounter{enumi}{2}
+\tightlist
+\item
+  Inspect the \textbf{df} dataframe -- which column contains an
+  explanation of the meaning of each submitted snowplow name?
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{str}\NormalTok{(df)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## spec_tbl_df [1,907 x 5] (S3: spec_tbl_df/tbl_df/tbl/data.frame)
+##  $ submission_number        : num [1:1907] 1 2 3 4 5 6 7 8 9 10 ...
+##  $ submitter_name_anonymized: chr [1:1907] "kjlt9cua" "KXKaabXN" "kjlt9cua" "Rv9sODqp" ...
+##  $ snowplow_name            : chr [1:1907] "rudolph" "salt life" "blizzard" "butter" ...
+##  $ meaning                  : chr [1:1907] "The red nose cuts through any storm." "We may not be near the ocean like everyone else with the stickers that say Salt Life, but we have plenty of salt!" "This plow can handle any storm." "It's amazing how the snow plows through snow like butter!" ...
+##  $ winning_name             : logi [1:1907] FALSE FALSE FALSE FALSE FALSE FALSE ...
+##  - attr(*, "spec")=
+##   .. cols(
+##   ..   submission_number = col_double(),
+##   ..   submitter_name_anonymized = col_character(),
+##   ..   snowplow_name = col_character(),
+##   ..   meaning = col_character(),
+##   ..   winning_name = col_logical()
+##   .. )
+##  - attr(*, "problems")=<externalptr>
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{head}\NormalTok{(df)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 6 x 5
+##   submission_number submitter_name_anonymized snowplow_name meaning winning_name
+##               <dbl> <chr>                     <chr>         <chr>   <lgl>       
+## 1                 1 kjlt9cua                  rudolph       The re~ FALSE       
+## 2                 2 KXKaabXN                  salt life     We may~ FALSE       
+## 3                 3 kjlt9cua                  blizzard      This p~ FALSE       
+## 4                 4 Rv9sODqp                  butter        It's a~ FALSE       
+## 5                 5 zzcc5FDn                  santa's 10 r~ They c~ FALSE       
+## 6                 6 wOrKO7XI                  plowy mcplow~ It wou~ FALSE
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{tail}\NormalTok{(df)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 6 x 5
+##   submission_number submitter_name_anonymized snowplow_name meaning winning_name
+##               <dbl> <chr>                     <chr>         <chr>   <lgl>       
+## 1              1941 35KBUE6l                  bubba         "It so~ FALSE       
+## 2              1942 35KBUE6l                  bart          "I pic~ FALSE       
+## 3              1943 OIhNAvlb                  optimus       "His c~ FALSE       
+## 4              1944 9N87xMNL                  jocko         "James~ TRUE        
+## 5              1945 7F1njdoT                  santa maria   "Remem~ FALSE       
+## 6              1948 BvIgeaPM                  santa maria   "Santa~ FALSE
+\end{verbatim}
+
+D. Transform that column into a \textbf{document-feature matrix}, using
+the \textbf{corpus()}, \textbf{tokens(), tokens\_select()}, and
+\textbf{dfm()} functions from the quanteda package. Do not forget to
+\textbf{remove stop words}.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\#install.packages("quanteda")}
+\FunctionTok{library}\NormalTok{(quanteda)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Package version: 3.1.0
+## Unicode version: 13.0
+## ICU version: 69.1
+\end{verbatim}
+
+\begin{verbatim}
+## Parallel computing: 8 of 8 threads used.
+\end{verbatim}
+
+\begin{verbatim}
+## See https://quanteda.io for tutorials and examples.
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{tweetCorpus }\OtherTok{\textless{}{-}} \FunctionTok{corpus}\NormalTok{(df}\SpecialCharTok{$}\NormalTok{meaning, }\AttributeTok{docnames=}\NormalTok{df}\SpecialCharTok{$}\NormalTok{submission\_number)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Warning: NA is replaced by empty string
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{tweetCorpus}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Corpus consisting of 1,907 documents.
+## 1 :
+## "The red nose cuts through any storm."
+## 
+## 2 :
+## "We may not be near the ocean like everyone else with the sti..."
+## 
+## 3 :
+## "This plow can handle any storm."
+## 
+## 4 :
+## "It's amazing how the snow plows through snow like butter!"
+## 
+## 5 :
+## "They can deliver through the bad weather and snow."
+## 
+## 6 :
+## "It would be a great name"
+## 
+## [ reached max_ndoc ... 1,901 more documents ]
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{toks }\OtherTok{\textless{}{-}} \FunctionTok{tokens}\NormalTok{(tweetCorpus, }\AttributeTok{remove\_punct=}\ConstantTok{TRUE}\NormalTok{)}
+\CommentTok{\#This code removes punctuation.}
+
+\NormalTok{toks\_nostop }\OtherTok{\textless{}{-}} \FunctionTok{tokens\_select}\NormalTok{(toks, }\AttributeTok{pattern =} \FunctionTok{stopwords}\NormalTok{(}\StringTok{"en"}\NormalTok{), }\AttributeTok{selection =} \StringTok{"remove"}\NormalTok{)}
+\CommentTok{\#We take our list of tokens and remove all the stopwords such as \textquotesingle{}I", \textquotesingle{}a\textquotesingle{} as we don\textquotesingle{}t need them.}
+
+\NormalTok{dfDFM }\OtherTok{\textless{}{-}} \FunctionTok{dfm}\NormalTok{(toks\_nostop, }\AttributeTok{tolower =} \ConstantTok{TRUE}\NormalTok{)}
+\NormalTok{dfDFM}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Document-feature matrix of: 1,907 documents, 2,807 features (99.83% sparse) and 0 docvars.
+##     features
+## docs red nose cuts storm may near ocean like everyone else
+##    1   1    1    1     1   0    0     0    0        0    0
+##    2   0    0    0     0   1    1     1    1        1    1
+##    3   0    0    0     1   0    0     0    0        0    0
+##    4   0    0    0     0   0    0     0    1        0    0
+##    5   0    0    0     0   0    0     0    0        0    0
+##    6   0    0    0     0   0    0     0    0        0    0
+## [ reached max_ndoc ... 1,901 more documents, reached max_nfeat ... 2,797 more features ]
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\#Document{-}feature matrix of: 1,907 documents, 2,807 features (99.83\% sparse).}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{enumerate}
+\def\labelenumi{\Alph{enumi}.}
+\setcounter{enumi}{4}
+\tightlist
+\item
+  Plot a \textbf{word cloud} where a word is only represented if it
+  appears \textbf{at least 2 times} in the corpus. \textbf{Hint:} use
+  \textbf{textplot\_wordcloud()} from the quanteda.textplots package:
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\#install.packages("quanteda.textplots")}
+\FunctionTok{library}\NormalTok{(quanteda.textplots)}
+\FunctionTok{textplot\_wordcloud}\NormalTok{(dfDFM, }\AttributeTok{min\_count =} \DecValTok{1}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Warning in graphics::strwidth(word[i], cex = size[i]): conversion failure on
+## '�' in 'mbcsToSbcs': dot substituted for <ef>
+\end{verbatim}
+
+\begin{verbatim}
+## Warning in graphics::strwidth(word[i], cex = size[i]): conversion failure on
+## '�' in 'mbcsToSbcs': dot substituted for <bf>
+\end{verbatim}
+
+\begin{verbatim}
+## Warning in graphics::strwidth(word[i], cex = size[i]): conversion failure on
+## '�' in 'mbcsToSbcs': dot substituted for <bd>
+\end{verbatim}
+
+\begin{verbatim}
+## Warning in text.default(x1, y1, word[i], cex = (1 + adjust) * size[i], offset =
+## 0, : conversion failure on '�' in 'mbcsToSbcs': dot substituted for <ef>
+\end{verbatim}
+
+\begin{verbatim}
+## Warning in text.default(x1, y1, word[i], cex = (1 + adjust) * size[i], offset =
+## 0, : conversion failure on '�' in 'mbcsToSbcs': dot substituted for <bf>
+\end{verbatim}
+
+\begin{verbatim}
+## Warning in text.default(x1, y1, word[i], cex = (1 + adjust) * size[i], offset =
+## 0, : conversion failure on '�' in 'mbcsToSbcs': dot substituted for <bd>
+\end{verbatim}
+
+\begin{verbatim}
+## Warning in text.default(x1, y1, word[i], cex = (1 + adjust) * size[i], offset =
+## 0, : font metrics unknown for Unicode character U+fffd
+\end{verbatim}
+
+\includegraphics{HW11_files/figure-latex/unnamed-chunk-7-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\#The wordcloud portrays the frequency of a given word, shown by its size in the diagram. }
+\CommentTok{\#Snow and \textquotesingle{}1/2\textquotesingle{} is the most frequent strings and this is shown by its size in the wordcloud. }
+\CommentTok{\#Only words which have appeared atleast twice have been included}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{enumerate}
+\def\labelenumi{\Alph{enumi}.}
+\setcounter{enumi}{5}
+\tightlist
+\item
+  Next, \textbf{increase the minimum count to 10}. What happens to the
+  word cloud? \textbf{Explain in a comment}.
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{textplot\_wordcloud}\NormalTok{(dfDFM, }\AttributeTok{min\_count =} \DecValTok{10}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Warning in graphics::strwidth(word[i], cex = size[i]): conversion failure on
+## '�' in 'mbcsToSbcs': dot substituted for <ef>
+\end{verbatim}
+
+\begin{verbatim}
+## Warning in graphics::strwidth(word[i], cex = size[i]): conversion failure on
+## '�' in 'mbcsToSbcs': dot substituted for <bf>
+\end{verbatim}
+
+\begin{verbatim}
+## Warning in graphics::strwidth(word[i], cex = size[i]): conversion failure on
+## '�' in 'mbcsToSbcs': dot substituted for <bd>
+\end{verbatim}
+
+\begin{verbatim}
+## Warning in text.default(x1, y1, word[i], cex = (1 + adjust) * size[i], offset =
+## 0, : conversion failure on '�' in 'mbcsToSbcs': dot substituted for <ef>
+\end{verbatim}
+
+\begin{verbatim}
+## Warning in text.default(x1, y1, word[i], cex = (1 + adjust) * size[i], offset =
+## 0, : conversion failure on '�' in 'mbcsToSbcs': dot substituted for <bf>
+\end{verbatim}
+
+\begin{verbatim}
+## Warning in text.default(x1, y1, word[i], cex = (1 + adjust) * size[i], offset =
+## 0, : conversion failure on '�' in 'mbcsToSbcs': dot substituted for <bd>
+\end{verbatim}
+
+\begin{verbatim}
+## Warning in text.default(x1, y1, word[i], cex = (1 + adjust) * size[i], offset =
+## 0, : font metrics unknown for Unicode character U+fffd
+\end{verbatim}
+
+\includegraphics{HW11_files/figure-latex/unnamed-chunk-8-1.pdf}
+
+\begin{enumerate}
+\def\labelenumi{\Alph{enumi}.}
+\setcounter{enumi}{6}
+\tightlist
+\item
+  What are the top 10 words in the word cloud?
+\end{enumerate}
+
+\textbf{Hint}: use textstat\_frequency in the quanteda.textstats package
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\#install.packages("quanteda.textstats")}
+\FunctionTok{library}\NormalTok{(quanteda.textstats)}
+\FunctionTok{library}\NormalTok{(quanteda)}
+\FunctionTok{head}\NormalTok{(}\FunctionTok{textstat\_frequency}\NormalTok{(dfDFM))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##    feature frequency rank docfreq group
+## 1        ½       432    1     143   all
+## 2        ï       336    2     147   all
+## 3     snow       321    3     292   all
+## 4 syracuse       174    4     164   all
+## 5     name       143    5     137   all
+## 6     plow       140    6     130   all
+\end{verbatim}
+
+\begin{enumerate}
+\def\labelenumi{\Alph{enumi}.}
+\setcounter{enumi}{7}
+\tightlist
+\item
+  Explain in a comment what you observed in the sorted list of word
+  counts.
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\#We see the 10 most freuqntly occuring words/strings. The string \textquotesingle{}1/2\textquotesingle{} is the most frequently used subset}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{part-2-analyze-the-sentiment-of-the-descriptions}{%
+\subsection{Part 2: Analyze the sentiment of the
+descriptions}\label{part-2-analyze-the-sentiment-of-the-descriptions}}
+
+\#\#\#Match the review words with positive and negative words
+
+\begin{enumerate}
+\def\labelenumi{\Roman{enumi}.}
+\tightlist
+\item
+  Read in the list of positive words (using the scan() function), and
+  output the first 5 words in the list.
+\end{enumerate}
+
+\url{https://intro-datascience.s3.us-east-2.amazonaws.com/positive-words.txt}
+
+There should be 2006 positive words words, so you may need to clean up
+these lists a bit.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{URL }\OtherTok{\textless{}{-}} \StringTok{\textquotesingle{}https://intro{-}datascience.s3.us{-}east{-}2.amazonaws.com/positive{-}words.txt\textquotesingle{}}
+\NormalTok{posWords }\OtherTok{\textless{}{-}} \FunctionTok{scan}\NormalTok{(URL, }\FunctionTok{character}\NormalTok{(}\DecValTok{0}\NormalTok{), }\AttributeTok{sep =} \StringTok{"}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\NormalTok{posWords }\OtherTok{\textless{}{-}}\NormalTok{ posWords[}\SpecialCharTok{{-}}\DecValTok{1}\SpecialCharTok{:{-}}\DecValTok{34}\NormalTok{]}
+\CommentTok{\#posWords}
+\CommentTok{\#This does a frequency match between a positive word and all the documents in corpusDFM.}
+\CommentTok{\#Only the positive words from the original corpus and the URL will be included}
+\end{Highlighting}
+\end{Shaded}
+
+J. Do the same for the the negative words list (there are 4783 negative
+words):
+\url{https://intro-datascience.s3.us-east-2.amazonaws.com/negative-words.txt}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{URL }\OtherTok{\textless{}{-}} \StringTok{\textquotesingle{}https://intro{-}datascience.s3.us{-}east{-}2.amazonaws.com/negative{-}words.txt\textquotesingle{}}
+\NormalTok{negWords }\OtherTok{\textless{}{-}} \FunctionTok{scan}\NormalTok{(URL, }\FunctionTok{character}\NormalTok{(}\DecValTok{0}\NormalTok{), }\AttributeTok{sep =} \StringTok{"}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\NormalTok{negWords }\OtherTok{\textless{}{-}}\NormalTok{ negWords[}\SpecialCharTok{{-}}\DecValTok{1}\SpecialCharTok{:{-}}\DecValTok{34}\NormalTok{]}
+\CommentTok{\#negWords}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{enumerate}
+\def\labelenumi{\Alph{enumi}.}
+\setcounter{enumi}{9}
+\tightlist
+\item
+  Using \textbf{dfm\_match()} with the dfm and the positive word file
+  you read in, and then \textbf{textstat\_frequency()}, output the 10
+  most frequent positive words
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{posDFM }\OtherTok{\textless{}{-}} \FunctionTok{dfm\_match}\NormalTok{(dfDFM, posWords) }
+\CommentTok{\#This code matches the positive words with the tweetDFM dataframe}
+\NormalTok{posFreq }\OtherTok{\textless{}{-}} \FunctionTok{textstat\_frequency}\NormalTok{(posDFM)}
+\CommentTok{\#This code tells the frequency of positive words in the documents}
+\NormalTok{posFreq[}\DecValTok{1}\SpecialCharTok{:}\DecValTok{10}\NormalTok{,]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##    feature frequency rank docfreq group
+## 1     like        88    1      85   all
+## 2    honor        47    2      47   all
+## 3    great        43    3      43   all
+## 4     good        28    4      28   all
+## 5      fun        27    5      24   all
+## 6   strong        25    6      25   all
+## 7     best        23    7      22   all
+## 8     love        21    8      21   all
+## 9     work        21    8      21   all
+## 10   clear        19   10      19   all
+\end{verbatim}
+
+\begin{enumerate}
+\def\labelenumi{\Alph{enumi}.}
+\setcounter{enumi}{12}
+\tightlist
+\item
+  Use R to print out the total number of positive words in the name
+  explanation.
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{count}\NormalTok{(}\FunctionTok{data.frame}\NormalTok{(}\FunctionTok{textstat\_frequency}\NormalTok{(posDFM)))[}\DecValTok{1}\NormalTok{, }\StringTok{\textquotesingle{}n\textquotesingle{}}\NormalTok{]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 211
+\end{verbatim}
+
+\begin{enumerate}
+\def\labelenumi{\Alph{enumi}.}
+\setcounter{enumi}{13}
+\tightlist
+\item
+  Repeat that process for the negative words you matched. Which negative
+  words were in the name explanation variable, and what is their total
+  number?
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{negDFM }\OtherTok{\textless{}{-}} \FunctionTok{dfm\_match}\NormalTok{(dfDFM, negWords)}
+\CommentTok{\#This code matches the negative words with the tweetDFM dataframe}
+\NormalTok{negFreq }\OtherTok{\textless{}{-}} \FunctionTok{textstat\_frequency}\NormalTok{(negDFM)}
+\CommentTok{\#This code tells the frequency of negative words in the documents.}
+\NormalTok{negFreq}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##           feature frequency rank docfreq group
+## 1           funny        25    1      25   all
+## 2            cold         8    2       8   all
+## 3           twist         8    2       8   all
+## 4            hard         7    4       7   all
+## 5      abominable         6    5       6   all
+## 6         problem         6    5       6   all
+## 7             bad         5    7       5   all
+## 8         destroy         5    7       5   all
+## 9            died         5    7       5   all
+## 10           bust         4   10       4   all
+## 11           dump         4   10       4   all
+## 12         frozen         4   10       4   all
+## 13        monster         4   10       4   all
+## 14       terrible         4   10       4   all
+## 15           blow         3   15       3   all
+## 16          busts         3   15       3   all
+## 17          crush         3   15       3   all
+## 18          silly         3   15       3   all
+## 19           bash         2   19       2   all
+## 20    challenging         2   19       2   all
+## 21         chilly         2   19       2   all
+## 22          crazy         2   19       2   all
+## 23      difficult         2   19       2   all
+## 24           dirt         2   19       2   all
+## 25          erase         2   19       2   all
+## 26           evil         2   19       2   all
+## 27           fear         2   19       2   all
+## 28           joke         2   19       2   all
+## 29         killed         2   19       2   all
+## 30           loud         2   19       2   all
+## 31         messes         2   19       2   all
+## 32          miser         2   19       2   all
+## 33        protest         2   19       2   all
+## 34          rough         2   19       2   all
+## 35           slow         2   19       2   all
+## 36          stuck         2   19       2   all
+## 37         abused         1   37       1   all
+## 38      adversary         1   37       1   all
+## 39          alarm         1   37       1   all
+## 40     apocalypse         1   37       1   all
+## 41        assault         1   37       1   all
+## 42      avalanche         1   37       1   all
+## 43          badly         1   37       1   all
+## 44         bleeds         1   37       1   all
+## 45         cancer         1   37       1   all
+## 46          cloud         1   37       1   all
+## 47         cloudy         1   37       1   all
+## 48        comical         1   37       1   all
+## 49    complaining         1   37       1   all
+## 50         crisis         1   37       1   all
+## 51       critical         1   37       1   all
+## 52         damage         1   37       1   all
+## 53           damn         1   37       1   all
+## 54           dark         1   37       1   all
+## 55           dead         1   37       1   all
+## 56         deadly         1   37       1   all
+## 57          death         1   37       1   all
+## 58       defiance         1   37       1   all
+## 59          delay         1   37       1   all
+## 60        despise         1   37       1   all
+## 61      destroyer         1   37       1   all
+## 62            die         1   37       1   all
+## 63     difficulty         1   37       1   all
+## 64       disabled         1   37       1   all
+## 65        disdain         1   37       1   all
+## 66       disorder         1   37       1   all
+## 67     disrespect         1   37       1   all
+## 68           dope         1   37       1   all
+## 69          doubt         1   37       1   all
+## 70         dreary         1   37       1   all
+## 71          drunk         1   37       1   all
+## 72           dumb         1   37       1   all
+## 73          dumps         1   37       1   all
+## 74        enemies         1   37       1   all
+## 75        evasion         1   37       1   all
+## 76         excuse         1   37       1   all
+## 77           fall         1   37       1   all
+## 78         fallen         1   37       1   all
+## 79        fatally         1   37       1   all
+## 80         fierce         1   37       1   all
+## 81         forged         1   37       1   all
+## 82       freezing         1   37       1   all
+## 83          frost         1   37       1   all
+## 84      hardships         1   37       1   all
+## 85          harsh         1   37       1   all
+## 86          hates         1   37       1   all
+## 87       horrible         1   37       1   all
+## 88      ignorance         1   37       1   all
+## 89     inadequacy         1   37       1   all
+## 90      inclement         1   37       1   all
+## 91     inexorable         1   37       1   all
+## 92       infamous         1   37       1   all
+## 93   intimidating         1   37       1   all
+## 94         ironic         1   37       1   all
+## 95          kills         1   37       1   all
+## 96          limit         1   37       1   all
+## 97        limited         1   37       1   all
+## 98           lone         1   37       1   all
+## 99           loot         1   37       1   all
+## 100    manipulate         1   37       1   all
+## 101           mar         1   37       1   all
+## 102        misery         1   37       1   all
+## 103        misfit         1   37       1   all
+## 104          miss         1   37       1   all
+## 105       mobster         1   37       1   all
+## 106     monstrous         1   37       1   all
+## 107         moody         1   37       1   all
+## 108          myth         1   37       1   all
+## 109         naive         1   37       1   all
+## 110         nasty         1   37       1   all
+## 111        object         1   37       1   all
+## 112      outbreak         1   37       1   all
+## 113        pander         1   37       1   all
+## 114           pig         1   37       1   all
+## 115          pity         1   37       1   all
+## 116        poorly         1   37       1   all
+## 117        puppet         1   37       1   all
+## 118   restriction         1   37       1   all
+## 119      rhetoric         1   37       1   all
+## 120         rival         1   37       1   all
+## 121       rivalry         1   37       1   all
+## 122       ruining         1   37       1   all
+## 123         ruins         1   37       1   all
+## 124          rust         1   37       1   all
+## 125       sarcasm         1   37       1   all
+## 126         scare         1   37       1   all
+## 127         scrap         1   37       1   all
+## 128 self-interest         1   37       1   all
+## 129          sour         1   37       1   all
+## 130    standstill         1   37       1   all
+## 131        suffer         1   37       1   all
+## 132     suffering         1   37       1   all
+## 133         tense         1   37       1   all
+## 134     toughness         1   37       1   all
+## 135   treacherous         1   37       1   all
+## 136      trickery         1   37       1   all
+## 137   undesirable         1   37       1   all
+## 138 unfortunately         1   37       1   all
+## 139    unfriendly         1   37       1   all
+## 140       unknown         1   37       1   all
+## 141    unpleasant         1   37       1   all
+## 142     unusually         1   37       1   all
+## 143         upset         1   37       1   all
+## 144         virus         1   37       1   all
+## 145         worry         1   37       1   all
+## 146         worse         1   37       1   all
+## 147         worst         1   37       1   all
+## 148        zombie         1   37       1   all
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\#Words such as funny, cold, twist, abomiable are in the negative words list in the name variable.}
+\CommentTok{\#Funny is the most negative word used.}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{enumerate}
+\def\labelenumi{\Alph{enumi}.}
+\setcounter{enumi}{14}
+\tightlist
+\item
+  Write a comment describing what you found after exploring the positive
+  and negative word lists. Which group is more common in this dataset?
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{count}\NormalTok{(}\FunctionTok{data.frame}\NormalTok{(}\FunctionTok{textstat\_frequency}\NormalTok{(negDFM)))[}\DecValTok{1}\NormalTok{, }\StringTok{\textquotesingle{}n\textquotesingle{}}\NormalTok{]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 148
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\#Positive words are more common as we have more numbers with higher frequency for each word.}
+\end{Highlighting}
+\end{Shaded}
+
+X. Complete the function below, so that it returns a sentiment score
+(number of positive words - number of negative words)
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(tidyverse)}
+\FunctionTok{library}\NormalTok{(quanteda.textstats)}
+\FunctionTok{library}\NormalTok{(quanteda)}
+
+\NormalTok{doMySentiment }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(posWords, negWords, stringToAnalyze ) \{}
+  
+\NormalTok{  toks }\OtherTok{\textless{}{-}} \FunctionTok{tokens}\NormalTok{(stringToAnalyze,   }\AttributeTok{remove\_punct=}\ConstantTok{TRUE}\NormalTok{)}
+\NormalTok{  toks\_nostop }\OtherTok{\textless{}{-}} \FunctionTok{tokens\_select}\NormalTok{(toks,    }\AttributeTok{pattern =}   \FunctionTok{stopwords}\NormalTok{(}\StringTok{"en"}\NormalTok{),    }
+                             \AttributeTok{selection  =}   \StringTok{"remove"}\NormalTok{)}
+\NormalTok{  meaningDFM }\OtherTok{\textless{}{-}} \FunctionTok{dfm}\NormalTok{(toks\_nostop)}
+  
+\NormalTok{  out}\OtherTok{\textless{}{-}}\FunctionTok{tryCatch}\NormalTok{(}
+  
+\NormalTok{  \{}
+\NormalTok{    posDFM }\OtherTok{\textless{}{-}} \FunctionTok{dfm\_match}\NormalTok{(meaningDFM, posWords)}
+\NormalTok{    posFreq }\OtherTok{\textless{}{-}} \FunctionTok{textstat\_frequency}\NormalTok{(posDFM)}
+\NormalTok{    sum\_pos}\OtherTok{\textless{}{-}} \FunctionTok{sum}\NormalTok{(posFreq}\SpecialCharTok{$}\NormalTok{frequency)}
+\NormalTok{  \},}
+  \AttributeTok{error=}\ControlFlowTok{function}\NormalTok{(err)\{}
+    \FunctionTok{return}\NormalTok{ (}\DecValTok{0}\NormalTok{)}
+\NormalTok{  \}}
+\NormalTok{  )}
+ 
+\NormalTok{  out1}\OtherTok{\textless{}{-}}\FunctionTok{tryCatch}\NormalTok{(}
+  
+\NormalTok{  \{}
+\NormalTok{    negDFM }\OtherTok{\textless{}{-}} \FunctionTok{dfm\_match}\NormalTok{(meaningDFM, negWords)}
+\NormalTok{    negFreq }\OtherTok{\textless{}{-}} \FunctionTok{textstat\_frequency}\NormalTok{(negDFM)}
+\NormalTok{    sum\_neg}\OtherTok{\textless{}{-}}\NormalTok{(}\FunctionTok{sum}\NormalTok{(negFreq}\SpecialCharTok{$}\NormalTok{frequency))}
+\NormalTok{  \},}
+  \AttributeTok{error=}\ControlFlowTok{function}\NormalTok{(err)\{}
+    \FunctionTok{return}\NormalTok{ (}\DecValTok{0}\NormalTok{)}
+\NormalTok{  \}}
+\NormalTok{  )}
+\NormalTok{ sentimentScore }\OtherTok{=}\FunctionTok{ifelse}\NormalTok{(out}\SpecialCharTok{==}\DecValTok{0}\NormalTok{,}\FunctionTok{ifelse}\NormalTok{(out1}\SpecialCharTok{==}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\SpecialCharTok{{-}}\NormalTok{out1),}
+                         \FunctionTok{ifelse}\NormalTok{(out1}\SpecialCharTok{==}\DecValTok{0}\NormalTok{,out,out}\SpecialCharTok{{-}}\NormalTok{out1))}
+
+  \FunctionTok{return}\NormalTok{(sentimentScore)}
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+X. Test your function with the string ``This book is horrible''
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{doMySentiment}\NormalTok{(posWords, negWords, }\StringTok{"This book is horrible"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] -1
+\end{verbatim}
+
+Use the syuzhet package, to calculate the sentiment of the same phrase
+(``This book is horrible''), using syuzhet's \textbf{get\_sentiment()}
+function, using the afinn method. In AFINN, words are scored as integers
+from -5 to +5:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\#install.packages("syuzhet")}
+\FunctionTok{library}\NormalTok{(syuzhet)}
+
+\FunctionTok{get\_sentiment}\NormalTok{(}\StringTok{"This book is horrible"}\NormalTok{, }\AttributeTok{method=}\StringTok{"afinn"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] -3
+\end{verbatim}
+
+\end{document}
